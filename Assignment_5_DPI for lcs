@@ -1,0 +1,100 @@
+/* Dynamic Programming implementation of LCS problem */
+#include<iostream>
+#include<cstring>
+#include<cstdlib>
+using namespace std;
+
+//For the purpose of this algorth, we will consider this will compare string same size =4
+
+//function gets stringX, stringY, size x, size y
+void lcsAlgorithm(char* X, char* Y, int x, int y)
+{
+	//making cnstant value of x+1 and y+1
+	//when we compare strig size 4, matrix built needs to be size 5x5
+
+	/*CREATE 2D Matrix*/
+	int lcsMatrix[5][5];
+
+	for (int i = 0; i <= x; i++)
+	{
+		for (int j = 0; j <= y; j++)
+		{
+			//If row OR colunm is 0, enter value 0
+			if (i == 0 || j == 0) {
+				lcsMatrix[i][j] = 0;
+				cout << lcsMatrix[i][j];
+			}
+			//If value for current position X-1 = Value to position J-1
+			//Get upwords value +1
+			else if (X[i - 1] == Y[j - 1]) {
+				lcsMatrix[i][j] = lcsMatrix[i - 1][j - 1] + 1;
+				cout << lcsMatrix[i][j];
+			}
+			else //if the value dont match, find maximun number comparing up row and left from this position
+			{
+				lcsMatrix[i][j] = max(lcsMatrix[i - 1][j], lcsMatrix[i][j - 1]);
+				lcsMatrix[i][j] = 0;
+				cout << lcsMatrix[i][j];
+			}
+			
+			}cout << " " << endl;
+		
+	}
+	
+
+	/*CALCULARING COMMON VALUES*/
+
+	int index = 3;//largest value for the sample data defined X[] and Y[]
+
+	// Create a character array to store the lcs string
+	//char lcs[index + 1];
+	char lcs[4];
+	lcs[index] = '\0'; // Set the terminating character
+
+	// Start from lcsMatrix[MAX][MAX]
+	int i = x, j = y;//i and j will start with highst size value for X[] and Y[]
+	while (i > 0 && j > 0)
+	{
+		//if X = J , add to lcs
+		//X[] = "ABAB";
+		//Y[] = "BABA";
+		if (X[i - 1] == Y[j - 1])
+		{
+			lcs[index - 1] = X[i - 1]; // Add X[] or J[] to LCS
+			//cout << lcs[index - 1];
+			i--; j--; index--;	 
+			
+		}
+
+		// //if the value dont match, find maximun number 
+		// IF lcsMatrix[i - 1][j] value is bigger than lcsMatrix[i][j - 1] value
+		//reduce row index size
+		else if (lcsMatrix[i - 1][j] > lcsMatrix[i][j - 1]) {
+			//cout << lcsMatrix[i][j]; cout << " " << endl;
+			i--; 
+			
+		}
+		else // IF lcsMatrix[i - 1][j] value is smaller than lcsMatrix[i][j - 1] value
+			//reduce column index size
+			j--;
+				
+	}
+	cout << " " << endl;
+
+	// Print the lcs
+	cout << "The longest common substring of " << X << " and " << Y << " is: " << lcs << endl;
+}
+
+
+int main()
+{
+	/*Defining values assuming string has the same leght 4*/
+	char X[] = "ABAB";
+	char Y[] = "BABA";
+	int x = 4;
+	int y = 4;
+
+	lcsAlgorithm(X, Y, x, y);
+	return 0;
+}
+//This exercise is based on: https://www.techiedelight.com/longest-common-substring-problem/
